@@ -34,3 +34,24 @@ def post_product():
     products.append(new_product)
 
     return jsonify(new_product), 201
+
+@app.route('/product/<int:id>', methods=['PUT'])
+def put_product(id):
+    updated_product = request.json
+    for product in products:
+        product['name'] = updated_product['name']
+        return jsonify(product), 200
+
+    return f'Product with id {id} not found', 404
+
+@app.route('/product/<int:id>', methods=['DELETE'])
+def delete_product(id):
+    product_list = [product for product in products if product['id'] == id]
+    if len(product_list) == 1:
+        products.remove(product_list[0])
+        return f'Product with id {id} deleted', 200
+    
+    return f'Product with id {id} not found', 404
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
